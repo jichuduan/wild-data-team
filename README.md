@@ -1,4 +1,4 @@
-# Final project: [working title]
+# Final project: Measuring User Sentiment Analysis Across AI Conversations
 
 Use this repository for your COMPSS 211A team project. Replace the bracketed
 prompts as your project develops. A reader should eventually be able to use
