@@ -166,11 +166,11 @@ Complete this section during the repository-setup lab.
 
 ## Data and privacy
 
-- **Source and access method:** [URL, API, archive, or other source]
-- **Coverage:** [Dates, filters, sample, and exclusions]
-- **What may be committed:** [Small public files, derived files, or none]
-- **What must stay outside GitHub:** [Restricted, identifying, or large files]
-- **How a new reader can obtain or reconstruct the data:** [Instructions]
+- **Source and access method:** WildChat-1M (public dataset on Hugging Face), downloaded through the Hugging Face datasets-server API in `data/data_import_cleaning.ipynb`.
+- **Coverage:** 30,000 randomly sampled conversations (seed 42) → 17,074 English → 432 with exactly five user messages after de-duplication → 316 in the final analysis after language and sensitivity exclusions.
+- **What may be committed:** Code, the codebook, and aggregate results (for example `docs/turn_summary.csv` and figures).
+- **What must stay outside GitHub:** The cleaned data file `data/wildchat_cleaned_exactly5.json` (raw user messages), API outputs in `llm_results/`, manual coding files, and API keys.
+- **How a new reader can obtain or reconstruct the data:** Team members and the instructional team can download `wildchat_cleaned_exactly5.json` from our restricted Google Drive folder ([link](https://drive.google.com/drive/folders/174MAPGSwK2jaluP-WnF-6mZdfIUkdJSe?usp=drive_link)) and place it in `data/`. Others can request access or regenerate it by running `data/data_import_cleaning.ipynb` (about 2 hours because of API rate limits).
 
 Never commit passwords, API keys, tokens, `.env` files, private data, or files
 you do not have permission to share. The template ignores `data/raw/` and
