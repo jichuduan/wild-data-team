@@ -74,10 +74,10 @@ For an out-of-scope language message, record the `message_id` and exclusion reas
 
 ## Validation and adjudication
 
-1. Select 10 conversations at random (seed = 42) and include all five user messages from each conversation: 50 messages total, grouped by conversation and ordered turns 1–5.
+1. Select 50 user messages at random (seed = 42) from all eligible messages in the analysis file. Messages are sampled individually, so a conversation may contribute zero, one, or several messages.
 2. Two human coders score the same sample independently with this codebook. They should not view or discuss each other's labels until both sheets are complete.
 3. The LLM scores the same eligible English messages only after the human-only coding is complete and any data-use approval for external API processing is in place.
-4. Report exact agreement, within-one-point agreement, Cohen's kappa, and quadratic weighted kappa for the two human coders before adjudication. Treat these as pilot estimates because messages are clustered within 10 conversations.
+4. Report exact agreement, within-one-point agreement, Cohen's kappa, and quadratic weighted kappa for the two human coders before adjudication. Treat these as pilot estimates because the sample is small (50 messages).
 5. Review every disagreement. Record both original scores, an adjudicated score, and a short reason. Update the codebook when disagreement reveals an unclear rule. Do not replace pre-adjudication reliability statistics with agreement after adjudication.
 6. A provisional project criterion is quadratic weighted kappa >= .70. The team should also review every disagreement and decide whether the codebook is clear enough for full coding.
 7. After the codebook is finalized, score the remaining in-scope messages in the current data file. Report the final analytic N after language exclusions; the source file contains 2,160 messages before those exclusions.

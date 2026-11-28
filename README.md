@@ -1,18 +1,19 @@
 # Final Project: Measuring User Sentiment Analysis Across AI Conversations
 
-Use this repository for your COMPSS 211A team project. Replace the bracketed
-prompts as your project develops. A reader should eventually be able to use
-this README to reproduce your work and use the project website to understand
-your question, evidence, interpretation, and limitations.
+This repository contains the code, codebook, and results for our COMPSS 211A
+team project. We use Gemini to score the tone of user messages in five-turn
+WildChat conversations and examine whether tone becomes more negative as
+conversations continue. This README explains how to reproduce the analysis;
+the project website presents the question, evidence, and limitations.
 
 ## Project overview
 
-- **Research question:** [What are you trying to learn?]
-- **Team members:** [Names]
-- **Unit of analysis:** [What does one row or document represent?]
-- **Data source:** [Where do the data come from?]
-- **Main result:** [Complete this after the analysis.]
-- **Important limitation:** [Complete this as soon as you identify one.]
+- **Research question:** In multi-turn user–ChatGPT conversations, does the tone expressed in user messages become more negative as the conversation proceeds?
+- **Team members:** Yunzhi(Wendy) Zhang, Macy Chen, Wangmeiqi(Maggie) Wei, Jeannette Harris, Jichu Duan
+- **Unit of analysis:** One user message; turn = its position (1–5) in a conversation.
+- **Data source:** [WildChat-1M](https://huggingface.co/datasets/allenai/WildChat-1M) (AllenAI), English conversations with exactly five user messages.
+- **Main result:** Mean tone became slightly more negative from turn 1 (−0.019) to turn 5 (−0.082); the paired turn-5 minus turn-1 difference was −0.063 (95% CI −0.108 to −0.019, N = 316 conversations). Most conversations (88%) showed no change.
+- **Important limitation:** Scores measure the tone of message text, not users' attitude toward AI, and Gemini tended to score more negatively than human reviewers.
 
 ## Start here
 
@@ -116,12 +117,20 @@ A simple notebook-first workflow is:
 
 ### Current run order
 
-Replace this example with your actual files:
-
-1. `[data-access step or script]`
-2. `[preparation notebook or script]`
-3. `[analysis notebook]`
-4. `[figure or table step]`
+1. Install the environment: `uv sync --frozen`
+2. The cleaned data `data/wildchat_cleaned_exactly5.json` is included in this repository. To regenerate it, run `data/data_import_cleaning.ipynb` from top to bottom (about 2 hours because of API rate limits).
+3. Set your Gemini API key in the terminal (never commit it): `export GEMINI_API_KEY="your-key"`
+4. Create the human validation sample:
+   ```
+   uv run python scripts/llm_sentiment_analysis_v4.py --input data/wildchat_cleaned_exactly5.json --model gemini-3.5-flash-lite --validation-only
+   ```
+   Two coders fill in `llm_results/manual_validation_PRIVATE.csv` and adjudicate disagreements.
+5. Score all messages (requires the adjudicated validation file):
+   ```
+   uv run python scripts/llm_sentiment_analysis_v4.py --input data/wildchat_cleaned_exactly5.json --model gemini-3.5-flash-lite --all --validation-approved
+   ```
+   The team excluded one medically sensitive and two mixed-language conversations by row index (using `--exclude-conversation-index`).
+6. Outputs are written to `llm_results/` (contains private files; do not commit). The aggregate results used in the report are `docs/turn_summary.csv` and `docs/assets/figure_turn_sentiment.svg`.
 
 ## Working together with GitHub
 
@@ -156,21 +165,17 @@ not blindly choose “ours” or “theirs.”
 
 ## Team agreements
 
-Complete this section during the repository-setup lab.
-
-- **Who may merge pull requests?** [Decision]
-- **Who currently owns each notebook?** [Decision]
-- **Where will the team record tasks?** [Decision]
-- **How will the team review code it did not write?** [Decision]
-- **What is the next task, and who owns it?** [Decision]
+- **Who may merge pull requests?** Any teammate, after at least one other teammate has reviewed and approved the PR.
+- **Where will the team record tasks?** WhatsApp Group Chat and Shared Google Docs.
+- **How will the team review code it did not write?** The reviewer pulls the branch, runs the code locally, and comments on the PR before approving.
 
 ## Data and privacy
 
-- **Source and access method:** [URL, API, archive, or other source]
-- **Coverage:** [Dates, filters, sample, and exclusions]
-- **What may be committed:** [Small public files, derived files, or none]
-- **What must stay outside GitHub:** [Restricted, identifying, or large files]
-- **How a new reader can obtain or reconstruct the data:** [Instructions]
+- **Source and access method:** WildChat-1M (public dataset on Hugging Face), downloaded through the Hugging Face datasets-server API in `data/data_import_cleaning.ipynb`.
+- **Coverage:** 30,000 randomly sampled conversations (seed 42) -> 17,074 English -> 432 with exactly five user messages after de-duplication -> 316 in the final analysis after language and sensitivity exclusions.
+- **What may be committed:** Code, the codebook, aggregate results (for example `docs/turn_summary.csv` and figures), and the cleaned subset `data/wildchat_cleaned_exactly5.json` drawn from the public WildChat-1M release.
+- **What must stay outside GitHub:** API outputs and individual-level labels in `llm_results/`, manual coding files, and API keys.
+- **How a new reader can obtain or reconstruct the data:** The cleaned data file is included in this repository. To rebuild it from the source, run `data/data_import_cleaning.ipynb` from top to bottom (about 2 hours because of API rate limits).
 
 Never commit passwords, API keys, tokens, `.env` files, private data, or files
 you do not have permission to share. The template ignores `data/raw/` and
@@ -179,14 +184,12 @@ commit.
 
 ## Results and interpretation
 
-Complete this section as the analysis develops.
-
-- **Main finding:** [Result with the relevant unit, count, or metric]
-- **Evidence:** [Notebook, figure, or table that supports it]
-- **Validation:** [Check, baseline, comparison, or inspected examples]
-- **Limitations:** [Where the evidence or method can fail]
-- **Strongest claim supported:** [A bounded conclusion]
-- **Claim not supported:** [A tempting conclusion the project cannot make]
+- **Main finding:** Mean user-message tone fell from −0.019 at turn 1 to −0.082 at turn 5; the share of negative messages rose from 1.9% to 9.5%. Within the same conversations, the turn-5 minus turn-1 difference was −0.063 (bootstrap 95% CI −0.108 to −0.019).
+- **Evidence:** `docs/turn_summary.csv`, `docs/assets/figure_turn_sentiment.svg`, and `docs/sentiment_methods/final_report.md`.
+- **Validation:** Two human coders agreed exactly on 86.96% of the 46 eligible messages in a 50-message random pilot (Cohen's κ = 0.709; quadratic weighted κ = 0.763). In a targeted review of 140 messages that oversampled likely errors, Gemini matched human scores in 70.7% of cases and was more negative in 33 of 41 disagreements.
+- **Limitations:** English-only, exactly-five-turn sample; scores ignore assistant replies; Gemini's negative lean may exaggerate the trend.
+- **Strongest claim supported:** In this sample, user-message tone became modestly more negative by turn five, driven by a minority of conversations (29 of 316).
+- **Claim not supported:** That users become dissatisfied with AI as conversations continue, or that this pattern holds for all ChatGPT users or conversation lengths.
 
 ## Final project website
 
