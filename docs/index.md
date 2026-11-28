@@ -41,7 +41,7 @@ Two terms matter throughout. **Tone** means the emotion expressed in the text of
 
 **Message Length and Word Use:** Using all 432 cleaned conversations, we compared message length and word usage across turns. We repeated the word analysis for messages containing 50 words or fewer to examine the influence of message length. This exploratory analysis uses a broader sample than the sentiment analysis (316 conversations).
 
-Code: data collection and cleaning in `notebooks/data_import_cleaning.ipynb`; scoring and turn comparisons in `scripts/llm_sentiment_analysis_v4.py`; length and word-use analysis in `notebooks/04_quantitative_findings.ipynb`.
+**Code:** Data collection and cleaning in `notebooks/data_import_cleaning.ipynb`; scoring and turn comparisons in `scripts/llm_sentiment_analysis_v4.py`; length and word-use analysis in `notebooks/04_quantitative_findings.ipynb`.
 
 ## Findings
 
