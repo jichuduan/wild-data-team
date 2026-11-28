@@ -93,11 +93,11 @@ By turn 5, users are reacting to ChatGPT's earlier answers by correcting and red
 
 ## Reproducibility
 
-- **Repository:** [Add the link to the project repository.]
+- **Repository:** https://jichuduan.github.io/wild-data-team/
 - **Environment:** Run `uv sync --frozen` from the repository folder.
-- **Run order:**
+- **Run Order:**
   1. `notebooks/data_import_cleaning.ipynb`: downloads the sample from Hugging Face and creates `data/wildchat_cleaned_exactly5.json`.
   2. `scripts/llm_sentiment_analysis_v4.py --validation-only`: creates and scores the validation sample (requires a local `GEMINI_API_KEY`; never commit the key).
   3. `scripts/llm_sentiment_analysis_v4.py --all --validation-approved`: scores all eligible messages and produces turn summaries and the figure.
   4. `notebooks/04_quantitative_findings.ipynb`: message length and word-use analysis.
-- **Data access:** WildChat-1M is publicly available on Hugging Face. The cleaned analysis file is included in the
+- **Data Access:** WildChat-1M is publicly available on Hugging Face. Our cleaned analysis file is in this project's GitHub repository at data/wildchat_cleaned_exactly5.json, or you can recreate it by running notebooks/data_import_cleaning.ipynb.
