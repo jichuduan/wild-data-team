@@ -25,7 +25,7 @@ Two terms matter throughout. **Tone** means the emotion expressed in the text of
 ## Data
 
 - **Source:** [WildChat-1M](https://huggingface.co/datasets/allenai/WildChat-1M), a public collection of real user conversations with ChatGPT released by AllenAI (Zhao et al., 2024).
-- **Unit of analysis:** One user message. Each conversation contributes five messages, one per turn.
+- **Unit of Analysis:** One user message. Each conversation contributes five messages, one per turn.
 - **Coverage:** We drew a reproducible random sample of 30,000 conversations (seed 42). Of these, 17,074 were labeled English, and 433 had exactly five non-empty user messages. After removing one duplicate, 432 conversations (2,160 user messages) remained. The sentiment analysis used 316 of these conversations (1,580 messages) after excluding conversations in which any message carried a non-English language label, one medically sensitive conversation, and two conversations with Russian or mixed-language turns despite English metadata.
 - **Access and Ethics:** WildChat contains real user text that can be sensitive. We screened for possible API keys, excluded a medically sensitive conversation before sending text to an external model, and redacted obvious identifiers (emails, URLs, phone numbers) in text sent to Gemini. Individual message-level labels and coder files are kept private; this page reports only aggregate results. The sample covers English conversations with exactly five user messages, so it does not represent all WildChat users or conversation lengths.
 
