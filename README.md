@@ -120,11 +120,7 @@ A simple notebook-first workflow is:
 1. Install the environment: `uv sync --frozen`
 2. The cleaned data `data/wildchat_cleaned_exactly5.json` is included in this repository. To regenerate it, run `data/data_import_cleaning.ipynb` from top to bottom (about 2 hours because of API rate limits).
 3. Set your Gemini API key in the terminal (never commit it): `export GEMINI_API_KEY="your-key"`
-4. Create the human validation sample:
-   ```
-   uv run python scripts/llm_sentiment_analysis_v4.py --input data/wildchat_cleaned_exactly5.json --model gemini-3.5-flash-lite --validation-only
-   ```
-   Two coders fill in `llm_results/manual_validation_PRIVATE.csv` and adjudicate disagreements.
+4. Create the human validation sample: select 10 conversations at random (seed 42) and include all five user messages from each (50 messages; 46 eligible after exclusions). Two coders score them independently and adjudicate disagreements.
 5. Score all messages (requires the adjudicated validation file):
    ```
    uv run python scripts/llm_sentiment_analysis_v4.py --input data/wildchat_cleaned_exactly5.json --model gemini-3.5-flash-lite --all --validation-approved
@@ -186,7 +182,7 @@ commit.
 
 - **Main finding:** Mean user-message tone fell from −0.019 at turn 1 to −0.082 at turn 5; the share of negative messages rose from 1.9% to 9.5%. Within the same conversations, the turn-5 minus turn-1 difference was −0.063 (bootstrap 95% CI −0.108 to −0.019).
 - **Evidence:** `docs/turn_summary.csv`, `docs/assets/figure_turn_sentiment.svg`, and `docs/sentiment_methods/final_report.md`.
-- **Validation:** Two human coders agreed exactly on 86.96% of the 46 eligible messages in a 50-message random pilot (Cohen's κ = 0.709; quadratic weighted κ = 0.763). In a targeted review of 140 messages that oversampled likely errors, Gemini matched human scores in 70.7% of cases and was more negative in 33 of 41 disagreements.
+- **Validation:** Two human coders agreed exactly on 86.96% of the 46 eligible messages in a 10-conversation pilot (Cohen's κ = 0.709; quadratic weighted κ = 0.763). In a targeted review of 140 messages that oversampled likely errors, Gemini matched human scores in 70.7% of cases and was more negative in 33 of 41 disagreements.
 - **Limitations:** English-only, exactly-five-turn sample; scores ignore assistant replies; Gemini's negative lean may exaggerate the trend.
 - **Strongest claim supported:** In this sample, user-message tone became modestly more negative by turn five, driven by a minority of conversations (29 of 316).
 - **Claim not supported:** That users become dissatisfied with AI as conversations continue, or that this pattern holds for all ChatGPT users or conversation lengths.
